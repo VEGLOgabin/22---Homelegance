@@ -1,0 +1,432 @@
+[
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Bedroom Collections",
+        "collection_link": "https://www.homelegance.com/bedroom_bedroomcollections/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Headboards",
+        "collection_link": "https://www.homelegance.com/bedroom_headboards/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "King Beds",
+        "collection_link": "https://www.homelegance.com/bedroom_kingbeds/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Queen Beds",
+        "collection_link": "https://www.homelegance.com/bedroom_queenbeds/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Full Beds",
+        "collection_link": "https://www.homelegance.com/bedroom_fullbeds/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Twin Beds",
+        "collection_link": "https://www.homelegance.com/bedroom_twinbeds/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Dressers",
+        "collection_link": "https://www.homelegance.com/bedroom_dressers/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Dresser Mirrors",
+        "collection_link": "https://www.homelegance.com/bedroom_dressermirrors/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Night Stands",
+        "collection_link": "https://www.homelegance.com/bedroom_nightstands/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Chests",
+        "collection_link": "https://www.homelegance.com/bedroom_chests/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Media Chests",
+        "collection_link": "https://www.homelegance.com/bedroom_mediachests/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Vanity Dressers & Mirrors",
+        "collection_link": "https://www.homelegance.com/bedroom_vanitydressersmirrors/"
+    },
+    {
+        "category_name": "Bedroom",
+        "collection_name": "Stools & Benches",
+        "collection_link": "https://www.homelegance.com/bedroom_stoolsbenches/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "Dining Room Collections",
+        "collection_link": "https://www.homelegance.com/dining_diningroomcollections/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "Dining Room Tables",
+        "collection_link": "https://www.homelegance.com/dining_diningroomtables/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "Dining Room Chairs",
+        "collection_link": "https://www.homelegance.com/dining_diningroomchairs/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "Dining Benches",
+        "collection_link": "https://www.homelegance.com/dining_diningbenches/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "Counter & Bar Height Tables",
+        "collection_link": "https://www.homelegance.com/dining_counterbarheighttables/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "Counter & Bar Height Chairs",
+        "collection_link": "https://www.homelegance.com/dining_counterbarheightchairs/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "Counter & Bar Height Stools",
+        "collection_link": "https://www.homelegance.com/dining_counterheightbarstools/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "Counter & Bar Height Benches",
+        "collection_link": "https://www.homelegance.com/dining_counterbarheightbenches/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "Servers & Buffets",
+        "collection_link": "https://www.homelegance.com/dining_serversbuffets/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "China Cabinets",
+        "collection_link": "https://www.homelegance.com/dining_chinacabinetshutches/"
+    },
+    {
+        "category_name": "Dining",
+        "collection_name": "Bar Furniture",
+        "collection_link": "https://www.homelegance.com/dining_barfurniture/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Youth Bedroom Collections",
+        "collection_link": "https://www.homelegance.com/youth_youthbedroomcollections/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Headboards",
+        "collection_link": "https://www.homelegance.com/youth_headboards/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Queen Beds",
+        "collection_link": "https://www.homelegance.com/youth_queenbeds/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Full Beds",
+        "collection_link": "https://www.homelegance.com/youth_fullbeds/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Twin Beds",
+        "collection_link": "https://www.homelegance.com/youth_twinbeds/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Youth Dressers",
+        "collection_link": "https://www.homelegance.com/youth_youthdresser/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Youth Dresser Mirrors",
+        "collection_link": "https://www.homelegance.com/youth_youthdressermirrors/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Youth Night Stands",
+        "collection_link": "https://www.homelegance.com/youth_youthnightstands/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Youth Chest Of Drawers",
+        "collection_link": "https://www.homelegance.com/youth_youthchestofdrawers/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Youth Armoires",
+        "collection_link": "https://www.homelegance.com/youth_youtharmoires/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Youth Media Chests",
+        "collection_link": "https://www.homelegance.com/youth_youthmediachests/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Desks",
+        "collection_link": "https://www.homelegance.com/youth_desks/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Desk Chairs",
+        "collection_link": "https://www.homelegance.com/youth_deskchairs/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Vanity Dressers & Mirrors",
+        "collection_link": "https://www.homelegance.com/youth_vanitydressersmirrors/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Stools & Benches",
+        "collection_link": "https://www.homelegance.com/youth_stoolsbenches/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Daybeds & Trundle Beds",
+        "collection_link": "https://www.homelegance.com/youth_daybeds_trundle/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Bunk & Loft Beds",
+        "collection_link": "https://www.homelegance.com/youth_bunkloftbeds/"
+    },
+    {
+        "category_name": "Youth",
+        "collection_name": "Futons & Click-Clacks",
+        "collection_link": "https://www.homelegance.com/youth_futonsclick-clacks/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Seating Collections",
+        "collection_link": "https://www.homelegance.com/seat_seatingcollections/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Sectionals",
+        "collection_link": "https://www.homelegance.com/seat_sectionals/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Sofas",
+        "collection_link": "https://www.homelegance.com/seat_sofas/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Sleeper Sofas",
+        "collection_link": "https://www.homelegance.com/seat_sleepersofas/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Love Seats",
+        "collection_link": "https://www.homelegance.com/seat_loveseats/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Chairs",
+        "collection_link": "https://www.homelegance.com/seat_chairs/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Accent Chairs",
+        "collection_link": "https://www.homelegance.com/seat_accentchairs/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Recliners",
+        "collection_link": "https://www.homelegance.com/seat_recliners/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Lift Chairs",
+        "collection_link": "https://www.homelegance.com/seat_liftchairs/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Chaises",
+        "collection_link": "https://www.homelegance.com/seat_chaises/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Ottomans & Benches",
+        "collection_link": "https://www.homelegance.com/seat_ottomansbenches/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Futons & Click-Clacks",
+        "collection_link": "https://www.homelegance.com/seat_futonsclick-clacks/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Settees",
+        "collection_link": "https://www.homelegance.com/seat_settees/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Daybeds & Trundle Beds",
+        "collection_link": "https://www.homelegance.com/seat_daybeds/"
+    },
+    {
+        "category_name": "Seating",
+        "collection_name": "Leather Seating",
+        "collection_link": "https://www.homelegance.com/seat_leather/"
+    },
+    {
+        "category_name": "Occasional",
+        "collection_name": "Occasional Table Collections",
+        "collection_link": "https://www.homelegance.com/occasional_tablecollections/"
+    },
+    {
+        "category_name": "Occasional",
+        "collection_name": "Cocktail Tables",
+        "collection_link": "https://www.homelegance.com/occasional_cocktailtables/"
+    },
+    {
+        "category_name": "Occasional",
+        "collection_name": "End & Side Tables",
+        "collection_link": "https://www.homelegance.com/occasional_endsidetables/"
+    },
+    {
+        "category_name": "Occasional",
+        "collection_name": "Sofa Tables",
+        "collection_link": "https://www.homelegance.com/occasional_sofatables/"
+    },
+    {
+        "category_name": "Occasional",
+        "collection_name": "Sofa Consoles",
+        "collection_link": "https://www.homelegance.com/occasional_sofaconsoles/"
+    },
+    {
+        "category_name": "Occasional",
+        "collection_name": "Ottomans & Benches",
+        "collection_link": "https://www.homelegance.com/occasional_ottomansbenches/"
+    },
+    {
+        "category_name": "Office",
+        "collection_name": "Office Collections",
+        "collection_link": "https://www.homelegance.com/office_officecollections/"
+    },
+    {
+        "category_name": "Office",
+        "collection_name": "Desks",
+        "collection_link": "https://www.homelegance.com/office_desks/"
+    },
+    {
+        "category_name": "Office",
+        "collection_name": "Desk Chairs",
+        "collection_link": "https://www.homelegance.com/office_deskchairs/"
+    },
+    {
+        "category_name": "Office",
+        "collection_name": "Bookcases & Shelves",
+        "collection_link": "https://www.homelegance.com/office_bookcasesshelves/"
+    },
+    {
+        "category_name": "Office",
+        "collection_name": "File Cabinets",
+        "collection_link": "https://www.homelegance.com/office_filecabinets/"
+    },
+    {
+        "category_name": "Accent",
+        "collection_name": "Ottomans & Benches",
+        "collection_link": "https://www.homelegance.com/accent_ottomansbenches/"
+    },
+    {
+        "category_name": "Accent",
+        "collection_name": "Accent Cabinets",
+        "collection_link": "https://www.homelegance.com/accent_accentcabinets/"
+    },
+    {
+        "category_name": "Media",
+        "collection_name": "Media Collections",
+        "collection_link": "https://www.homelegance.com/media_mediacollections/"
+    },
+    {
+        "category_name": "Media",
+        "collection_name": "TV Stands",
+        "collection_link": "https://www.homelegance.com/media_tvstands/"
+    },
+    {
+        "category_name": "Media",
+        "collection_name": "Bookcases & Shelves",
+        "collection_link": "https://www.homelegance.com/media_bookcasesshelves/"
+    },
+    {
+        "category_name": "Media",
+        "collection_name": "Media Chests",
+        "collection_link": "https://www.homelegance.com/media_mediachests/"
+    },
+    {
+        "category_name": "Lighting",
+        "collection_name": "Table Lamps",
+        "collection_link": "https://www.homelegance.com/lighting_tablelamps/"
+    },
+    {
+        "category_name": "Lighting",
+        "collection_name": "Floor Lamps",
+        "collection_link": "https://www.homelegance.com/lighting_floorlamps/"
+    },
+    {
+        "category_name": "Mattress",
+        "collection_name": "Bed Frames",
+        "collection_link": "https://www.homelegance.com/mattress_bedframes/"
+    },
+    {
+        "category_name": "Mattress",
+        "collection_name": "MT-G Series",
+        "collection_link": "https://www.homelegance.com/mt_g_series/"
+    },
+    {
+        "category_name": "Mattress",
+        "collection_name": "MT-H Series",
+        "collection_link": "https://www.homelegance.com/mt_h_series/"
+    },
+    {
+        "category_name": "Mattress",
+        "collection_name": "MT-NG Series",
+        "collection_link": "https://www.homelegance.com/mt_ng_series/"
+    },
+    {
+        "category_name": "Mattress",
+        "collection_name": "MT-PG Series",
+        "collection_link": "https://www.homelegance.com/mt_pg_series/"
+    },
+    {
+        "category_name": "Mattress",
+        "collection_name": "MT-PH Series",
+        "collection_link": "https://www.homelegance.com/mt_ph_series/"
+    },
+    {
+        "category_name": "Mattress",
+        "collection_name": "MT-USG Series",
+        "collection_link": "https://www.homelegance.com/mt_us_series/"
+    },
+    {
+        "category_name": "Mattress",
+        "collection_name": "MT-USH Series",
+        "collection_link": "https://www.homelegance.com/mt_ush_series/"
+    },
+    {
+        "category_name": "Mattress",
+        "collection_name": "MT-UNG Series",
+        "collection_link": "https://www.homelegance.com/mt_un_series/"
+    },
+    {
+        "category_name": "Mattress",
+        "collection_name": "MT-UNH Series",
+        "collection_link": "https://www.homelegance.com/mt_unh_series/"
+    }
+]
