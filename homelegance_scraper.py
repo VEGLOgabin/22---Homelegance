@@ -269,109 +269,203 @@ class ProductSpider(scrapy.Spider):
             else:
                 
                 self.logger.info(f"Skipping already scraped product: {product_link} under category: {category_name}")
-    
+
+
     def parse(self, response):
-        """Parse the product page using BeautifulSoup and extract details."""
-        self.logger.info(f"Parsing product: {response.url}")
-        try:
-            product = response.meta['product']
-            soup = BeautifulSoup(response.text, 'html.parser')
-            category_name = product['category_name']
-            collection_name = product['collection_name']
-            product_link = product['product_link']
-            
-            product_name = soup.find("div", class_ = "model_name font-FuturaPT-Book color-text-42210B")
-            
-            if product_name:
-                product_name = product_name.get_text().replace("\n", " ")
+            """Parse the product page using BeautifulSoup and extract details."""
+            self.logger.info(f"Parsing product: {response.url}")
+            try:
+                product = response.meta['product']
+                soup = BeautifulSoup(response.text, 'html.parser')
+                category_name = product['category_name']
+                collection_name = product['collection_name']
+                product_link = product['product_link']
                 
-            if not product_name:
-                 product_name = soup.find('div', class_ = "d-flex align-items-center collection-name mt-2")
-                 if product_name:
-                     product_name = product_name.get_text().replace("\n", " ")
+                product_name = soup.find("div", class_="model_name font-FuturaPT-Book color-text-42210B")
+                if product_name:
+                    product_name = product_name.get_text().replace("\n", " ")
+                else:
+                    product_name = soup.find('div', class_="d-flex align-items-center collection-name mt-2")
+                    if product_name:
+                        product_name = product_name.get_text().replace("\n", " ")
+                
+                weight_dimensions_product_details = soup.find_all('div', class_="norm-desc ps-5 pe-5 mt-3 pb-4 description-box")
+                product_details = []
+                weights_dimensions = []
+                if weight_dimensions_product_details:
+                    for item in weight_dimensions_product_details:
+                        label = item.find("p").text.strip()
+                        if "Weights & Dimensions" in label:
+                            weight_dimensions = item.find_all("li")
+                            for li in weight_dimensions:
+                                text = li.get_text(strip=True)
+                                if ": " in text:
+                                    key, value = text.split(": ", 1)
+                                    dim = f"{key.strip()} : {value.strip()}"
+                                    weights_dimensions.append(dim)
+                        elif "Product Details" in label:
+                            product_detail = item.find_all("li")
+                            for detail in product_detail:
+                                if detail.text.strip() != "Prop 65 Information":
+                                    product_details.append(detail.text.strip())
+                
+                imgs = soup.find_all('a', class_="cloud-zoom-gallery")
+                product_images = []
+                for item in imgs:
+                    product_images.append('https://www.homelegance.com' + item.get("href"))
+                if product_images:
+                    product_images = list(set(product_images))
+                
+                packaging = soup.find('div', class_="norm-desc ps-5 pe-5 mt-4 mb-4 pb-4")
+                packaging_data = []
+                if packaging:
+                    packaging = packaging.find_all("li")
+                    for li in packaging:
+                        text = li.get_text(strip=True)
+                        if ": " in text:
+                            key, value = text.split(": ", 1)
+                            if key != "Assembly Instruction":
+                                pack = f"{key.strip()} : {value.strip()}"
+                                packaging_data.append(pack)
+                        if li.find("a"):
+                            link = li.find("a").get("href")
+                            packaging_data.append(f"Assembly Instruction : https://www.homelegance.com{link}")
+                
+                description = soup.find('div', class_="desc font-FuturaPT-Light collapse-description overflow-auto")
+                if description:
+                    description = description.text.strip()
+
+                sku = ""
+                if product_name:
+                    sku = product_name.split()[0].strip()
+                    product_name = product_name.replace(sku, "").strip()
+
+                # Prepare the JSON structure
+                new_product_data = {
+                    'Category': category_name,
+                    'Collection': collection_name,
+                    'Product Link': product_link,
+                    'Product Title': product_name,
+                    "SKU": sku,
+                    'Packaging': packaging_data,
+                    'Product Details': product_details,  # Ensure this remains an array
+                    'Weights & Dimensions': weights_dimensions,
+                    "Product Images": product_images,
+                    "Description": description
+                }
+
+                # Append to scraped data and write to file
+                self.scraped_data.append(new_product_data)
+                with open('output/products-data.json', 'w', encoding='utf-8') as f:
+                    json.dump(self.scraped_data, f, ensure_ascii=False, indent=4)
+                
+                self.logger.info(f"Successfully scraped product: {product_link}")
+
+            except Exception as e:
+                self.logger.error(f"Error parsing {response.url}: {e}")
+    
+    # def parse(self, response):
+    #     """Parse the product page using BeautifulSoup and extract details."""
+    #     self.logger.info(f"Parsing product: {response.url}")
+    #     try:
+    #         product = response.meta['product']
+    #         soup = BeautifulSoup(response.text, 'html.parser')
+    #         category_name = product['category_name']
+    #         collection_name = product['collection_name']
+    #         product_link = product['product_link']
             
-            weight_dimensions_product_details = soup.find_all('div', class_ = "norm-desc ps-5 pe-5 mt-3 pb-4 description-box")
-            product_details = []
-            weights_dimensions = []
-            if weight_dimensions_product_details:
-                for item in weight_dimensions_product_details:
-                    label = item.find("p").text.strip()
-                    print(item.find("p").text.strip())
-                    if "Weights & Dimensions" in label:
-                        weight_dimensions = item.find_all("li")
-                        for li in weight_dimensions:
-                            text = li.get_text(strip=True)
-                            if ": " in text:
-                                key, value = text.split(": ", 1)
-                                dim = f"{key.strip()} : {value.strip()}"
-                                weights_dimensions.append(dim)
-                    if "Product Details" in label:
-                        product_detail = item.find_all("li")
-                        for detail in product_detail:
-                            if detail.text.strip() != "Prop 65 Information":
-                                product_details.append(detail.text.strip())
+    #         product_name = soup.find("div", class_ = "model_name font-FuturaPT-Book color-text-42210B")
+            
+    #         if product_name:
+    #             product_name = product_name.get_text().replace("\n", " ")
+                
+    #         if not product_name:
+    #              product_name = soup.find('div', class_ = "d-flex align-items-center collection-name mt-2")
+    #              if product_name:
+    #                  product_name = product_name.get_text().replace("\n", " ")
+            
+    #         weight_dimensions_product_details = soup.find_all('div', class_ = "norm-desc ps-5 pe-5 mt-3 pb-4 description-box")
+    #         product_details = []
+    #         weights_dimensions = []
+    #         if weight_dimensions_product_details:
+    #             for item in weight_dimensions_product_details:
+    #                 label = item.find("p").text.strip()
+    #                 print(item.find("p").text.strip())
+    #                 if "Weights & Dimensions" in label:
+    #                     weight_dimensions = item.find_all("li")
+    #                     for li in weight_dimensions:
+    #                         text = li.get_text(strip=True)
+    #                         if ": " in text:
+    #                             key, value = text.split(": ", 1)
+    #                             dim = f"{key.strip()} : {value.strip()}"
+    #                             weights_dimensions.append(dim)
+    #                 if "Product Details" in label:
+    #                     product_detail = item.find_all("li")
+    #                     for detail in product_detail:
+    #                         if detail.text.strip() != "Prop 65 Information":
+    #                             product_details.append(detail.text.strip())
                                 
-                        # product_details = ", ".join(product_details)
+    #                     # product_details = ", ".join(product_details)
 
-            imgs = soup.find_all('a', class_ ="cloud-zoom-gallery")
-            product_images = []
-            for item in imgs:
+    #         imgs = soup.find_all('a', class_ ="cloud-zoom-gallery")
+    #         product_images = []
+    #         for item in imgs:
                 
-                product_images.append('https://www.homelegance.com' + item.get("href"))
+    #             product_images.append('https://www.homelegance.com' + item.get("href"))
                 
-            if product_images:
-                product_images = list(set(product_images))
+    #         if product_images:
+    #             product_images = list(set(product_images))
             
-            packaging = soup.find('div', class_ = "norm-desc ps-5 pe-5 mt-4 mb-4 pb-4")
-            packaging_data = []
-            if packaging:
-                packaging = packaging.find_all("li")
+    #         packaging = soup.find('div', class_ = "norm-desc ps-5 pe-5 mt-4 mb-4 pb-4")
+    #         packaging_data = []
+    #         if packaging:
+    #             packaging = packaging.find_all("li")
                 
-                for li in packaging:
-                    text = li.get_text(strip=True)
-                    if ": " in text:
-                        key, value = text.split(": ", 1)
-                        if key != "Assembly Instruction":
-                            pack = f"{key.strip()} : {value.strip()}"
-                            packaging_data.append(pack)
+    #             for li in packaging:
+    #                 text = li.get_text(strip=True)
+    #                 if ": " in text:
+    #                     key, value = text.split(": ", 1)
+    #                     if key != "Assembly Instruction":
+    #                         pack = f"{key.strip()} : {value.strip()}"
+    #                         packaging_data.append(pack)
                             
-                    if li.find("a"):
-                        link = li.find("a").get("href")
-                        packaging_data.append(f"Assembly Instruction : https://www.homelegance.com{link}")
-            description = soup.find('div', class_ = "desc font-FuturaPT-Light collapse-description overflow-auto")
-            if description:
-                description = description.text.strip()
+    #                 if li.find("a"):
+    #                     link = li.find("a").get("href")
+    #                     packaging_data.append(f"Assembly Instruction : https://www.homelegance.com{link}")
+    #         description = soup.find('div', class_ = "desc font-FuturaPT-Light collapse-description overflow-auto")
+    #         if description:
+    #             description = description.text.strip()
 
-            sku = ""
+    #         sku = ""
 
-            if product_name:
-                sku = product_name.split()[0].strip()
+    #         if product_name:
+    #             sku = product_name.split()[0].strip()
 
-                product_name = product_name.replace(sku, "").strip()
+    #             product_name = product_name.replace(sku, "").strip()
 
 
-            new_product_data =  {
-                'Category': category_name,
-                'Collection': collection_name,
-                'Product Link': product_link,
-                'Product Title': product_name,
-                "SKU": sku,
-                'Packaging': packaging_data,
-                'Product Details': product_details,
-                'Weights & Dimensions ': weights_dimensions,
-                "Product Images": product_images,
-                "Description" : description
-            }
+    #         new_product_data =  {
+    #             'Category': category_name,
+    #             'Collection': collection_name,
+    #             'Product Link': product_link,
+    #             'Product Title': product_name,
+    #             "SKU": sku,
+    #             'Packaging': packaging_data,
+    #             'Product Details': product_details,
+    #             'Weights & Dimensions ': weights_dimensions,
+    #             "Product Images": product_images,
+    #             "Description" : description
+    #         }
             
-            self.scraped_data.append(new_product_data)
+    #         self.scraped_data.append(new_product_data)
             
-            with open('output/products-data.json', 'w', encoding='utf-8') as f:
-                json.dump(self.scraped_data, f, ensure_ascii=False, indent=4)
-            self.logger.info(f"Successfully scraped product: {product_link}")
+    #         with open('output/products-data.json', 'w', encoding='utf-8') as f:
+    #             json.dump(self.scraped_data, f, ensure_ascii=False, indent=4)
+    #         self.logger.info(f"Successfully scraped product: {product_link}")
             
             
-        except Exception as e:
-            self.logger.error(f"Error parsing {response.url}: {e}")
+    #     except Exception as e:
+    #         self.logger.error(f"Error parsing {response.url}: {e}")
 
     
     
@@ -383,24 +477,24 @@ class ProductSpider(scrapy.Spider):
 
 def run_spiders():
     
-    output_dir = 'utilities'
-    os.makedirs(output_dir, exist_ok=True)
-    products_links_scraper = MenuScraper()
-    products_links_scraper.scrape()
+    # output_dir = 'utilities'
+    # os.makedirs(output_dir, exist_ok=True)
+    # products_links_scraper = MenuScraper()
+    # products_links_scraper.scrape()
     process = CrawlerProcess()
-    def run_collection_spider():
-        process.crawl(CollectionSpider)
-    def run_product_spider():
-        process.crawl(ProductSpider)
+    # def run_collection_spider():
+    #     process.crawl(CollectionSpider)
+    # def run_product_spider():
+    #     process.crawl(ProductSpider)
 
-    def spider_closed(spider, reason):
-        if isinstance(spider, CollectionSpider):
-            run_product_spider()
-    dispatcher.connect(spider_closed, signal=signals.spider_closed)
-    process.crawl(CollectionSpider)
-    process.start()
-
-    # process.crawl(ProductSpider)
+    # def spider_closed(spider, reason):
+    #     if isinstance(spider, CollectionSpider):
+    #         run_product_spider()
+    # dispatcher.connect(spider_closed, signal=signals.spider_closed)
+    # process.crawl(CollectionSpider)
     # process.start()
+
+    process.crawl(ProductSpider)
+    process.start()
 
 run_spiders()
