@@ -5,6 +5,7 @@ import scrapy
 import os
 from scrapy.crawler import CrawlerProcess
 import requests
+from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
 
@@ -73,112 +74,97 @@ class MenuScraper:
         
         
         
-        
-        
-class CollectionSpider(scrapy.Spider):
-    name = 'collection_spider'
-    
-    custom_settings = {
-        'CONCURRENT_REQUESTS': 1,
-        'FEEDS': {
-            'utilities/products-links.json': {
-                'format': 'json',
-                'overwrite': True,
-                'encoding': 'utf8',
-            },
-        },
-        'LOG_LEVEL': 'INFO',
-        'RETRY_ENABLED': True,
-        'RETRY_TIMES': 3,
-        'RETRY_HTTP_CODES': [500, 502, 503, 504, 522, 524, 408, 429],
-        'HTTPERROR_ALLOW_ALL': True,
-        'DEFAULT_REQUEST_HEADERS': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' \
-                        'AppleWebKit/537.36 (KHTML, like Gecko) ' \
-                        'Chrome/115.0.0.0 Safari/537.36',
-            'Accept-Language': 'en',
-        },
-    }
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 
-    def start_requests(self):
-        output_dir = 'utilities'
-        os.makedirs(output_dir, exist_ok=True)
 
-        file_path = 'utilities/products-links.json'
-        with open(file_path, 'w') as file:
-            pass
-        
-        with open('utilities/category-collection.json') as file:
-            self.collections = json.load(file)
-        
-        if self.collections:
-            yield from self.process_collection(self.collections[0], 0)
 
-    def process_collection(self, collection, collection_index):
-        category_name = collection['category_name']
-        collection_name = collection['collection_name']
-        collection_link = collection['collection_link']
+
+
+def process_collection_products(page, collection, collection_index, collections, output_file, all_products):
+    category_name = collection['category_name']
+    collection_name = collection['collection_name']
+    collection_link = collection['collection_link']
+
+    current_index = collection_index
+
+    print(f"Processing category: {category_name}, collection: {collection_name}")
+
+    page.goto(collection_link)
+    while True:
+        content = page.content()
+        soup = BeautifulSoup(content, 'html.parser')
+        products = soup.find_all('div', class_="col position-relative")
         
-        yield scrapy.Request(
-            url=collection_link,
-            callback=self.parse_collection,
-            meta={
+        product_links = [
+            "https://www.homelegance.com" + item.find('a').get('href')
+            for item in products if item.find('a')
+        ]
+        print("Products found: ", len(product_links))
+        
+        for link in product_links:
+            data = {
                 'category_name': category_name,
                 'collection_name': collection_name,
-                'collection_link': collection_link,
-                'collection_index': collection_index 
-            },
-            dont_filter=True
-        )
-        
-
-    def parse_collection(self, response):
-        soup = BeautifulSoup(response.text, 'html.parser')
-        products = soup.find_all('div', class_ = "col position-relative")
-        product_links = ["https://www.homelegance.com" + item.find('a').get('href') for item in products if item.find('a')]
-
-        for link in product_links:
-            yield {
-                'category_name': response.meta['category_name'],
-                'collection_name': response.meta['collection_name'],
                 'product_link': link
             }
-            
-        self.logger.info(f"Current category : {response.meta['category_name']} and collection : {response.meta['collection_name']}")
-            
+            all_products.append(data)
+
         paginations = soup.find("nav", attrs={'aria-label': 'Page navigation'})
         if paginations:
-            active_page = int(paginations.find("li", class_ ="page-item active").find("a").text.strip())
-            all_pages = paginations.find_all("li", class_ ="page-item")
-            item = int(all_pages[-2].find("a").text.strip())
-            if item > active_page:
-                next_page_url = response.meta['collection_link'] + f"?pageNo={active_page + 1}"
+            active_page = int(paginations.find("li", class_="page-item active").find("a").text.strip())
+            all_pages = paginations.find_all("li", class_="page-item")
+            last_page = int(all_pages[-2].find("a").text.strip())
 
-                if next_page_url != response.url:
-                    self.logger.info(f"Following next page: {next_page_url}")
-                    yield scrapy.Request(
-                        url=next_page_url,
-                        callback=self.parse_collection,
-                        meta=response.meta,
-                        dont_filter=True
-                    )
-                else:
-                    self.logger.info("No new page detected. Stopping pagination.")
+            if active_page < last_page:
+                next_page_url = f"{collection_link}?pageNo={active_page + 1}"
+                print(f"Following next page: {next_page_url}")
+                page.goto(next_page_url)
             else:
-                self.logger.info("Reached the last page of the collection.")
-        
-        current_index = response.meta['collection_index']
-        next_index = current_index + 1
-        if next_index < len(self.collections):
-            next_collection = self.collections[next_index]
-            yield from self.process_collection(next_collection, next_index)
+                print("Reached the last page of the collection.")
+                break
         else:
-            self.logger.info("All collections have been processed.")
-            
+            print("No pagination found.")
+            break
+
+    next_index = current_index + 1
+    if next_index < len(collections):
+        process_collection_products(page, collections[next_index], next_index, collections, output_file, all_products)
+    else:
+        print("All collections have been processed.")
+        # Write all data to the output file at the end
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(all_products, f, indent=4)
 
 
 
 
+def get_collections_products():
+    output_dir = 'utilities'
+    os.makedirs(output_dir, exist_ok=True)
+
+    category_file = os.path.join(output_dir, 'category-collection.json')
+    output_file = os.path.join(output_dir, 'products-links.json')
+
+    all_products = []  # Initialize the list to hold all product data
+
+    with open(category_file, 'r', encoding='utf-8') as file:
+        collections = json.load(file)
+
+    if collections:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+
+            process_collection_products(page, collections[0], 0, collections, output_file, all_products)
+
+            browser.close()
+
+    print("Scraping completed.")
+
+
+
+
+# ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
      
@@ -364,110 +350,7 @@ class ProductSpider(scrapy.Spider):
             except Exception as e:
                 self.logger.error(f"Error parsing {response.url}: {e}")
     
-    # def parse(self, response):
-    #     """Parse the product page using BeautifulSoup and extract details."""
-    #     self.logger.info(f"Parsing product: {response.url}")
-    #     try:
-    #         product = response.meta['product']
-    #         soup = BeautifulSoup(response.text, 'html.parser')
-    #         category_name = product['category_name']
-    #         collection_name = product['collection_name']
-    #         product_link = product['product_link']
-            
-    #         product_name = soup.find("div", class_ = "model_name font-FuturaPT-Book color-text-42210B")
-            
-    #         if product_name:
-    #             product_name = product_name.get_text().replace("\n", " ")
-                
-    #         if not product_name:
-    #              product_name = soup.find('div', class_ = "d-flex align-items-center collection-name mt-2")
-    #              if product_name:
-    #                  product_name = product_name.get_text().replace("\n", " ")
-            
-    #         weight_dimensions_product_details = soup.find_all('div', class_ = "norm-desc ps-5 pe-5 mt-3 pb-4 description-box")
-    #         product_details = []
-    #         weights_dimensions = []
-    #         if weight_dimensions_product_details:
-    #             for item in weight_dimensions_product_details:
-    #                 label = item.find("p").text.strip()
-    #                 print(item.find("p").text.strip())
-    #                 if "Weights & Dimensions" in label:
-    #                     weight_dimensions = item.find_all("li")
-    #                     for li in weight_dimensions:
-    #                         text = li.get_text(strip=True)
-    #                         if ": " in text:
-    #                             key, value = text.split(": ", 1)
-    #                             dim = f"{key.strip()} : {value.strip()}"
-    #                             weights_dimensions.append(dim)
-    #                 if "Product Details" in label:
-    #                     product_detail = item.find_all("li")
-    #                     for detail in product_detail:
-    #                         if detail.text.strip() != "Prop 65 Information":
-    #                             product_details.append(detail.text.strip())
-                                
-    #                     # product_details = ", ".join(product_details)
 
-    #         imgs = soup.find_all('a', class_ ="cloud-zoom-gallery")
-    #         product_images = []
-    #         for item in imgs:
-                
-    #             product_images.append('https://www.homelegance.com' + item.get("href"))
-                
-    #         if product_images:
-    #             product_images = list(set(product_images))
-            
-    #         packaging = soup.find('div', class_ = "norm-desc ps-5 pe-5 mt-4 mb-4 pb-4")
-    #         packaging_data = []
-    #         if packaging:
-    #             packaging = packaging.find_all("li")
-                
-    #             for li in packaging:
-    #                 text = li.get_text(strip=True)
-    #                 if ": " in text:
-    #                     key, value = text.split(": ", 1)
-    #                     if key != "Assembly Instruction":
-    #                         pack = f"{key.strip()} : {value.strip()}"
-    #                         packaging_data.append(pack)
-                            
-    #                 if li.find("a"):
-    #                     link = li.find("a").get("href")
-    #                     packaging_data.append(f"Assembly Instruction : https://www.homelegance.com{link}")
-    #         description = soup.find('div', class_ = "desc font-FuturaPT-Light collapse-description overflow-auto")
-    #         if description:
-    #             description = description.text.strip()
-
-    #         sku = ""
-
-    #         if product_name:
-    #             sku = product_name.split()[0].strip()
-
-    #             product_name = product_name.replace(sku, "").strip()
-
-
-    #         new_product_data =  {
-    #             'Category': category_name,
-    #             'Collection': collection_name,
-    #             'Product Link': product_link,
-    #             'Product Title': product_name,
-    #             "SKU": sku,
-    #             'Packaging': packaging_data,
-    #             'Product Details': product_details,
-    #             'Weights & Dimensions ': weights_dimensions,
-    #             "Product Images": product_images,
-    #             "Description" : description
-    #         }
-            
-    #         self.scraped_data.append(new_product_data)
-            
-    #         with open('output/products-data.json', 'w', encoding='utf-8') as f:
-    #             json.dump(self.scraped_data, f, ensure_ascii=False, indent=4)
-    #         self.logger.info(f"Successfully scraped product: {product_link}")
-            
-            
-    #     except Exception as e:
-    #         self.logger.error(f"Error parsing {response.url}: {e}")
-
-    
     
     
 
@@ -481,19 +364,11 @@ def run_spiders():
     # os.makedirs(output_dir, exist_ok=True)
     # products_links_scraper = MenuScraper()
     # products_links_scraper.scrape()
+
+
+    # get_collections_products()
+
     process = CrawlerProcess()
-    # def run_collection_spider():
-    #     process.crawl(CollectionSpider)
-    # def run_product_spider():
-    #     process.crawl(ProductSpider)
-
-    # def spider_closed(spider, reason):
-    #     if isinstance(spider, CollectionSpider):
-    #         run_product_spider()
-    # dispatcher.connect(spider_closed, signal=signals.spider_closed)
-    # process.crawl(CollectionSpider)
-    # process.start()
-
     process.crawl(ProductSpider)
     process.start()
 
