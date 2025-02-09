@@ -1,5 +1,4 @@
-from scrapy import signals
-from pydispatch import dispatcher
+
 import json
 import scrapy
 import os
@@ -360,13 +359,13 @@ class ProductSpider(scrapy.Spider):
 
 def run_spiders():
     
-    # output_dir = 'utilities'
-    # os.makedirs(output_dir, exist_ok=True)
-    # products_links_scraper = MenuScraper()
-    # products_links_scraper.scrape()
+    output_dir = 'utilities'
+    os.makedirs(output_dir, exist_ok=True)
+    products_links_scraper = MenuScraper()
+    products_links_scraper.scrape()
 
 
-    # get_collections_products()
+    get_collections_products()
 
     process = CrawlerProcess()
     process.crawl(ProductSpider)
